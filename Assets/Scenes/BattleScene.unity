@@ -1351,6 +1351,7 @@ MonoBehaviour:
   - {fileID: 676565723}
   - {fileID: 495120689}
   m_chessboard: {fileID: 1844137827}
+  sControl: {fileID: 412653194}
 --- !u!4 &312876415
 Transform:
   m_ObjectHideFlags: 0
@@ -1804,6 +1805,7 @@ GameObject:
   - component: {fileID: 412653193}
   - component: {fileID: 412653192}
   - component: {fileID: 412653191}
+  - component: {fileID: 412653194}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1876,6 +1878,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &412653194
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 412653190}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06d220a8c3d6c164ca9d5643361ac0e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  music: {fileID: 8300000, guid: 1ec9fa1f0a4c1cf49bb25e00ec7a3f6a, type: 3}
+  death:
+  - {fileID: 8300000, guid: 144baa8412e460a4aa5fb85faa4b88ce, type: 3}
+  - {fileID: 8300000, guid: 0a0e3c306107a0f4cba6e2c525f92c16, type: 3}
+  - {fileID: 8300000, guid: ff4b4664c9fd3294e9bea1065c22d904, type: 3}
+  click: {fileID: 8300000, guid: 09cb7b40b05669041b41c746b6968e78, type: 3}
+  move: {fileID: 8300000, guid: 02bf4b8dff411c843ac73740961dea36, type: 3}
 --- !u!1001 &424432624
 PrefabInstance:
   m_ObjectHideFlags: 0
