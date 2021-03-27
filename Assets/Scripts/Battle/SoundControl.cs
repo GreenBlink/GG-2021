@@ -10,6 +10,7 @@ public class SoundControl : MonoBehaviour
     [SerializeField] private List<AudioClip> death;
     [SerializeField] private AudioClip click;
     [SerializeField] private AudioClip move;
+    [SerializeField] private float volume;
     private AudioSource asource;
 
 
@@ -17,6 +18,7 @@ public class SoundControl : MonoBehaviour
     void Start()
     {
         asource = this.gameObject.AddComponent<AudioSource>() as AudioSource;
+        asource.volume = volume;
         asource.clip = music;
         asource.Play();
     }
