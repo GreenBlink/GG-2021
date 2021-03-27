@@ -9,10 +9,11 @@ public class VictoryRule : Rule
 	{
 		KillKing,
 		KillAll,
-		KillPawn
+		KillList
 	}
 	
 	public TypeVictoryRule m_TypeVictoryRule;
+	public Piece.TypePiece m_TypePiece;
 
 	[HideInInspector] public RulesManager.TypeRule m_TypeRule = RulesManager.TypeRule.Victory;
 }

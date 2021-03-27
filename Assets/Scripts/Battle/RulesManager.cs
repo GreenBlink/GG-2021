@@ -54,8 +54,8 @@ public class RulesManager : MonoBehaviour
                 idWin = m_piecesManager.GetIsKillKing();
                 break;
             
-            case VictoryRule.TypeVictoryRule.KillPawn:
-                idWin = m_piecesManager.GetIsKillPawn();
+            case VictoryRule.TypeVictoryRule.KillList:
+                idWin = m_piecesManager.GetIsKillList();
                 break;
             
             case VictoryRule.TypeVictoryRule.KillAll:
@@ -85,6 +85,11 @@ public class RulesManager : MonoBehaviour
     {
         if (m_currentVictoryRule == victoryRule)
             return;
+
+        if (victoryRule.m_TypeVictoryRule == VictoryRule.TypeVictoryRule.KillList)
+        {
+            m_piecesManager.BuildListKill(victoryRule.m_TypePiece);
+        }
         
         m_currentVictoryRule = victoryRule;
         m_descriptionRuleVictory = InitiateDescriptionRule(m_descriptionRuleVictory, victoryRule);

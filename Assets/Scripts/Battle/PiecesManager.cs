@@ -12,7 +12,8 @@ public class PiecesManager : MonoBehaviour
 	[SerializeField] private List<Piece> m_piecesBlack;
 	[SerializeField] private Chessboard m_chessboard;
 
-	private List<Piece> m_pieces = new List<Piece>();
+	private List<Piece> m_piecesAll = new List<Piece>();
+	private List<Piece> m_piecesKill = new List<Piece>();
 	private Piece m_choosePieces;
 	private int m_idCurrentPlayer;
 
@@ -23,9 +24,9 @@ public class PiecesManager : MonoBehaviour
 		InitiatePieces(m_piecesWhite, 0);
 		InitiatePieces(m_piecesBlack, 1);
 		
-		m_pieces.Clear();
-		m_pieces.AddRange(m_piecesWhite);
-		m_pieces.AddRange(m_piecesBlack);
+		m_piecesAll.Clear();
+		m_piecesAll.AddRange(m_piecesWhite);
+		m_piecesAll.AddRange(m_piecesBlack);
 	}
 
 	public void ChangePlayer()
@@ -51,12 +52,12 @@ public class PiecesManager : MonoBehaviour
 	
 	public int GetIsKillKing()
 	{
-		if (IsDeathList(m_piecesWhite))
+		if (IsDeathKing(m_piecesWhite))
 		{
 			return 1;
 		}
 
-		if (IsDeathList(m_piecesBlack))
+		if (IsDeathKing(m_piecesBlack))
 		{
 			return 0;
 		}
@@ -64,14 +65,14 @@ public class PiecesManager : MonoBehaviour
 		return -1;
 	}
 	
-	public int GetIsKillPawn()
+	public int GetIsKillList()
 	{
-		if (IsDeathList(m_piecesWhite))
+		if (IsDeathKillList())
 		{
 			return 1;
 		}
 
-		if (IsDeathList(m_piecesBlack))
+		if (IsDeathKillList())
 		{
 			return 0;
 		}
@@ -171,18 +172,18 @@ public class PiecesManager : MonoBehaviour
 	{
 		if (typePiece == Piece.TypePiece.Any)
 		{
-			for (int i = 0; i < m_pieces.Count; i++)
+			for (int i = 0; i < m_piecesAll.Count; i++)
 			{
-				m_pieces[i].SetMoveRule(moveRule);
+				m_piecesAll[i].SetMoveRule(moveRule);
 			}
 		}
 		else
 		{
-			for (int i = 0; i < m_pieces.Count; i++)
+			for (int i = 0; i < m_piecesAll.Count; i++)
 			{
-				if (m_pieces[i].GetRule() == typePiece)
+				if (m_piecesAll[i].GetRule() == typePiece)
 				{
-					m_pieces[i].SetMoveRule(moveRule);
+					m_piecesAll[i].SetMoveRule(moveRule);
 				}
 			}
 		}
@@ -192,10 +193,32 @@ public class PiecesManager : MonoBehaviour
 	public Chessboard GetChessboard() =>m_chessboard;
 	public bool IsChoosePiece() => m_choosePieces != null;
 
+	public void BuildListKill(Piece.TypePiece typePiece)
+	{
+		m_piecesKill.Clear();
+		
+		for (int i = 0; i < m_piecesAll.Count; i++)
+		{
+			if (m_piecesAll[i].GetRule() == typePiece && m_piecesAll[i].gameObject.activeSelf)
+			{
+				m_piecesKill.Add(m_piecesAll[i]);
+			}
+		}
+	}
+
+	private bool IsDeathKillList()
+	{
+		return m_piecesKill.Find(x => x.gameObject.activeSelf) == null;
+	}
+
 	private bool IsDeathList(List<Piece> pieces)
 	{
-		Piece piece = pieces.Find(x => x.gameObject.activeSelf);
 		return pieces.Find(x => x.gameObject.activeSelf) == null;
+	}
+
+	private bool IsDeathKing(List<Piece> pieces)
+	{
+		return pieces.Find(x => x.GetRule() == Piece.TypePiece.King && x.gameObject.activeSelf) == null;
 	}
 
 	private void InitiatePieces(List<Piece> pieces, int idPlayer)
