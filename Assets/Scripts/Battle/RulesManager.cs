@@ -12,6 +12,7 @@ public class RulesManager : MonoBehaviour
     }
 
     [SerializeField] private List<MoveRule> m_moveRules;
+    [SerializeField] private List<MoveRule> m_VictoryRules;
     
     [Space][SerializeField] private RuleDescription m_prefabDescriptionRule;
     [SerializeField] private Transform m_containerDescriptionRule;
