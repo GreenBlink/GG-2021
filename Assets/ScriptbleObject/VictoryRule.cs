@@ -7,9 +7,8 @@ public class VictoryRule : Rule
 {
 	public enum TypeVictoryRule
 	{
-		KillKing,
 		KillAll,
-		KillList
+		KillTarget
 	}
 	
 	public TypeVictoryRule m_TypeVictoryRule;

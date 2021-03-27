@@ -50,11 +50,7 @@ public class RulesManager : MonoBehaviour
         
         switch (m_currentVictoryRule.m_TypeVictoryRule)
         {
-            case VictoryRule.TypeVictoryRule.KillKing:
-                idWin = m_piecesManager.GetIsKillKing();
-                break;
-            
-            case VictoryRule.TypeVictoryRule.KillList:
+            case VictoryRule.TypeVictoryRule.KillTarget:
                 idWin = m_piecesManager.GetIsKillList();
                 break;
             
@@ -86,9 +82,9 @@ public class RulesManager : MonoBehaviour
         if (m_currentVictoryRule == victoryRule)
             return;
 
-        if (victoryRule.m_TypeVictoryRule == VictoryRule.TypeVictoryRule.KillList)
+        if (victoryRule.m_TypeVictoryRule == VictoryRule.TypeVictoryRule.KillTarget)
         {
-            m_piecesManager.BuildListKill(victoryRule.m_TypePiece);
+            m_piecesManager.BuildListKills(victoryRule.m_TypePiece);
         }
         
         m_currentVictoryRule = victoryRule;

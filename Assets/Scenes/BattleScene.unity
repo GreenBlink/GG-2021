@@ -5663,7 +5663,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 26dcee7d0ef500d47a00c6d20552d435, type: 2}
   - {fileID: 11400000, guid: a5472cf06f11e9c469ea00e69ed4b92c, type: 2}
   m_VictoryRules:
-  - {fileID: 11400000, guid: 2d1e5aa9dcd9ea44e9f5d8da19c3beba, type: 2}
+  - {fileID: 11400000, guid: 992f282aa27c55d43ba4bb33067541d1, type: 2}
   m_prefabDescriptionRule: {fileID: -5791037878205872844, guid: cbecff0e63c71b047b23d09e68d7b058, type: 3}
   m_containerDescriptionRule: {fileID: 1019786288}
 --- !u!4 &1314823620

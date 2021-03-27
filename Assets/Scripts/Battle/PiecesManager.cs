@@ -13,7 +13,8 @@ public class PiecesManager : MonoBehaviour
 	[SerializeField] private Chessboard m_chessboard;
 
 	private List<Piece> m_piecesAll = new List<Piece>();
-	private List<Piece> m_piecesKill = new List<Piece>();
+	private List<Piece> m_piecesKillWhite = new List<Piece>();
+	private List<Piece> m_piecesKillBlack = new List<Piece>();
 	private Piece m_choosePieces;
 	private int m_idCurrentPlayer;
 
@@ -49,30 +50,15 @@ public class PiecesManager : MonoBehaviour
 
 		return -1;
 	}
-	
-	public int GetIsKillKing()
-	{
-		if (IsDeathKing(m_piecesWhite))
-		{
-			return 1;
-		}
 
-		if (IsDeathKing(m_piecesBlack))
-		{
-			return 0;
-		}
-
-		return -1;
-	}
-	
 	public int GetIsKillList()
 	{
-		if (IsDeathKillList())
+		if (IsDeathKillList(m_piecesKillWhite))
 		{
 			return 1;
 		}
 
-		if (IsDeathKillList())
+		if (IsDeathKillList(m_piecesKillBlack))
 		{
 			return 0;
 		}
@@ -189,36 +175,37 @@ public class PiecesManager : MonoBehaviour
 		}
 	}
 	
+	public void BuildListKills(Piece.TypePiece typePiece)
+	{
+		BuildListKill(m_piecesKillWhite,m_piecesWhite, typePiece);
+		BuildListKill(m_piecesKillBlack,m_piecesBlack, typePiece);
+	} 
+	
 	public int GetIdPlayer() => m_idCurrentPlayer;
 	public Chessboard GetChessboard() =>m_chessboard;
 	public bool IsChoosePiece() => m_choosePieces != null;
 
-	public void BuildListKill(Piece.TypePiece typePiece)
+	private void BuildListKill(List<Piece> pieces, List<Piece> piecesTarget, Piece.TypePiece typePiece)
 	{
-		m_piecesKill.Clear();
+		pieces.Clear();
 		
-		for (int i = 0; i < m_piecesAll.Count; i++)
+		for (int i = 0; i < piecesTarget.Count; i++)
 		{
-			if (m_piecesAll[i].GetRule() == typePiece && m_piecesAll[i].gameObject.activeSelf)
+			if (piecesTarget[i].GetRule() == typePiece && piecesTarget[i].gameObject.activeSelf)
 			{
-				m_piecesKill.Add(m_piecesAll[i]);
+				pieces.Add(piecesTarget[i]);
 			}
 		}
 	}
 
-	private bool IsDeathKillList()
+	private bool IsDeathKillList(List<Piece> pieces)
 	{
-		return m_piecesKill.Find(x => x.gameObject.activeSelf) == null;
+		return pieces.Find(x => !x.gameObject.activeSelf) != null;
 	}
 
 	private bool IsDeathList(List<Piece> pieces)
 	{
 		return pieces.Find(x => x.gameObject.activeSelf) == null;
-	}
-
-	private bool IsDeathKing(List<Piece> pieces)
-	{
-		return pieces.Find(x => x.GetRule() == Piece.TypePiece.King && x.gameObject.activeSelf) == null;
 	}
 
 	private void InitiatePieces(List<Piece> pieces, int idPlayer)
