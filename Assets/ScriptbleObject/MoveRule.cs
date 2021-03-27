@@ -9,6 +9,13 @@ public class MoveRule : Rule
     {
         Standart,
         OneMove,
+        DiagonalMove,
+        ForwardAndBackMove,
+        ForwardMove,
+        FreeMove,
+        KnightMove,
+        QueenMove,
+        StraightLinesMove
     }
     
     public Piece.TypePiece m_TypePiece;
