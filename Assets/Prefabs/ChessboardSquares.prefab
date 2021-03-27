@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5619590973861514596}
   - component: {fileID: 5619590973861514597}
-  - component: {fileID: 5619590973861514599}
+  - component: {fileID: 359439882921393470}
   m_Layer: 0
   m_Name: ChessboardSquares
   m_TagString: Untagged
@@ -52,7 +52,7 @@ MonoBehaviour:
   m_colorGreen: {r: 0.35261044, g: 1, b: 0.2867924, a: 1}
   m_colorRed: {r: 1, g: 0.1830188, b: 0.1830188, a: 1}
   m_colorBlue: {r: 0.2396226, g: 0.26657867, b: 1, a: 1}
---- !u!61 &5619590973861514599
+--- !u!61 &359439882921393470
 BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -62,10 +62,10 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.030846119, y: 0.05342436}
+  m_Offset: {x: 0.0027370453, y: 0.1176973}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -76,7 +76,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1.1332417, y: 0.3834002}
+  m_Size: {x: 1.6404924, y: 0.7646054}
   m_EdgeRadius: 0
 --- !u!1 &5619590974295790063
 GameObject:

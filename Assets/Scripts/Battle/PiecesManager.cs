@@ -7,11 +7,12 @@ using UnityEngine.Events;
 public class PiecesManager : MonoBehaviour
 {
 	public UnityEvent m_changePlayerEvent;
-	
+
 	[SerializeField] private List<Piece> m_piecesWhite;
 	[SerializeField] private List<Piece> m_piecesBlack;
 	[SerializeField] private Chessboard m_chessboard;
-	
+
+	private List<Piece> m_pieces = new List<Piece>();
 	private Piece m_choosePieces;
 	private int m_idCurrentPlayer;
 
@@ -21,12 +22,61 @@ public class PiecesManager : MonoBehaviour
 		m_chessboard.Initiate(this);
 		InitiatePieces(m_piecesWhite, 0);
 		InitiatePieces(m_piecesBlack, 1);
+		
+		m_pieces.Clear();
+		m_pieces.AddRange(m_piecesWhite);
+		m_pieces.AddRange(m_piecesBlack);
 	}
 
 	public void ChangePlayer()
 	{
 		m_idCurrentPlayer = m_idCurrentPlayer == 0 ? 1 : 0;
 		m_changePlayerEvent.Invoke();
+	}
+
+	public int GetIsKillAll()
+	{
+		if (IsDeathList(m_piecesWhite))
+		{
+			return 1;
+		}
+
+		if (IsDeathList(m_piecesBlack))
+		{
+			return 0;
+		}
+
+		return -1;
+	}
+	
+	public int GetIsKillKing()
+	{
+		if (IsDeathList(m_piecesWhite))
+		{
+			return 1;
+		}
+
+		if (IsDeathList(m_piecesBlack))
+		{
+			return 0;
+		}
+
+		return -1;
+	}
+	
+	public int GetIsKillPawn()
+	{
+		if (IsDeathList(m_piecesWhite))
+		{
+			return 1;
+		}
+
+		if (IsDeathList(m_piecesBlack))
+		{
+			return 0;
+		}
+
+		return -1;
 	}
 
 	public void MoveParty(ChessboardSquare square, Piece piece)
@@ -48,12 +98,14 @@ public class PiecesManager : MonoBehaviour
 					if (MovePiece(square))
 					{
 						DestroyPiece(piece);
+						ChangePlayer();
 					}
 				}
 			}
 			else
 			{
 				MovePiece(square);
+				ChangePlayer();
 			}
 		}
 		else
@@ -79,7 +131,6 @@ public class PiecesManager : MonoBehaviour
 			if (m_choosePieces.Move(square))
 			{
 				CancelChoosePiece();
-				ChangePlayer();
 				return true;
 			}
 			else
@@ -116,23 +167,20 @@ public class PiecesManager : MonoBehaviour
 
 	public void SetNewMoveRule(Piece.TypePiece typePiece, IMoveRule moveRule)
 	{
-		List<Piece> pieces = m_piecesWhite;
-		pieces.AddRange(m_piecesBlack);
-		
 		if (typePiece == Piece.TypePiece.Any)
 		{
-			for (int i = 0; i < pieces.Count; i++)
+			for (int i = 0; i < m_pieces.Count; i++)
 			{
-				pieces[i].SetMoveRule(moveRule);
+				m_pieces[i].SetMoveRule(moveRule);
 			}
 		}
 		else
 		{
-			for (int i = 0; i < pieces.Count; i++)
+			for (int i = 0; i < m_pieces.Count; i++)
 			{
-				if (pieces[i].GetRule() == typePiece)
+				if (m_pieces[i].GetRule() == typePiece)
 				{
-					pieces[i].SetMoveRule(moveRule);
+					m_pieces[i].SetMoveRule(moveRule);
 				}
 			}
 		}
@@ -141,6 +189,12 @@ public class PiecesManager : MonoBehaviour
 	public int GetIdPlayer() => m_idCurrentPlayer;
 	public Chessboard GetChessboard() =>m_chessboard;
 	public bool IsChoosePiece() => m_choosePieces != null;
+
+	private bool IsDeathList(List<Piece> pieces)
+	{
+		Piece piece = pieces.Find(x => x.gameObject.activeSelf);
+		return pieces.Find(x => x.gameObject.activeSelf) == null;
+	}
 
 	private void InitiatePieces(List<Piece> pieces, int idPlayer)
 	{

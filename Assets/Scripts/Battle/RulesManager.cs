@@ -12,25 +12,79 @@ public class RulesManager : MonoBehaviour
     }
 
     [SerializeField] private List<MoveRule> m_moveRules;
-    [SerializeField] private List<MoveRule> m_VictoryRules;
+    [SerializeField] private List<VictoryRule> m_VictoryRules;
     
     [Space][SerializeField] private RuleDescription m_prefabDescriptionRule;
     [SerializeField] private Transform m_containerDescriptionRule;
 
     private PiecesManager m_piecesManager;
     private MoveRule m_currentMoveRule;
+    private VictoryRule m_currentVictoryRule;
 
     private RuleDescription m_descriptionRuleMove;
+    private RuleDescription m_descriptionRuleVictory;
 
     public void Initiate(PiecesManager piecesManager)
     {
         m_piecesManager = piecesManager;
         SetMoveRule(m_moveRules[0]);
+        SetVictoryRule(m_VictoryRules[0]);
+    }
+    
+    public void GenerationMove()
+    {
+        float chance = Random.Range(0f, 1f);
+        if (chance > 0.5f)
+        {
+            GenerationMoveVictory();
+        }
+        else
+        {
+            GenerationMoveRule();
+        }
     }
 
-    public void GenerationMoveRule()
+    public int GetIsWin()
+    {
+        int idWin = -1;
+        
+        switch (m_currentVictoryRule.m_TypeVictoryRule)
+        {
+            case VictoryRule.TypeVictoryRule.KillKing:
+                idWin = m_piecesManager.GetIsKillKing();
+                break;
+            
+            case VictoryRule.TypeVictoryRule.KillPawn:
+                idWin = m_piecesManager.GetIsKillPawn();
+                break;
+            
+            case VictoryRule.TypeVictoryRule.KillAll:
+                idWin = m_piecesManager.GetIsKillAll();
+                break;
+        }
+
+        if (idWin == -1)
+        {
+            idWin = m_piecesManager.GetIsKillAll();
+        }
+
+        return idWin;
+    }
+    
+    private void GenerationMoveVictory()
+    {
+        SetVictoryRule(m_VictoryRules[Random.Range(0, m_VictoryRules.Count)]);
+    }
+
+    private void GenerationMoveRule()
     {
         SetMoveRule(m_moveRules[Random.Range(0, m_moveRules.Count)]);
+    }
+
+    private void SetVictoryRule(VictoryRule victoryRule)
+    {
+        m_currentVictoryRule = victoryRule;
+        m_descriptionRuleVictory = InitiateDescriptionRule(m_descriptionRuleVictory, victoryRule);
     }
 
     private void SetMoveRule(MoveRule moveRule)
@@ -53,12 +107,18 @@ public class RulesManager : MonoBehaviour
                 break;
         }
 
-        if (m_descriptionRuleMove != null)
+        m_descriptionRuleMove = InitiateDescriptionRule(m_descriptionRuleMove, moveRule);
+    }
+
+    private RuleDescription InitiateDescriptionRule(RuleDescription description, Rule rule)
+    {
+        if (description != null)
         {
-            Destroy(m_descriptionRuleMove.gameObject);
+            Destroy(description.gameObject);
         }
 
-        m_descriptionRuleMove = Instantiate(m_prefabDescriptionRule, m_containerDescriptionRule);
-        m_descriptionRuleMove.Initiate(moveRule);
+        description = Instantiate(m_prefabDescriptionRule, m_containerDescriptionRule);
+        description.Initiate(rule);
+        return description;
     }
 }
