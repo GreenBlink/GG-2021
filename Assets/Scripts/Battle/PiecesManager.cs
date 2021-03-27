@@ -16,12 +16,14 @@ public class PiecesManager : MonoBehaviour
 	private List<Piece> m_piecesAll = new List<Piece>();
 	private List<Piece> m_piecesKillWhite = new List<Piece>();
 	private List<Piece> m_piecesKillBlack = new List<Piece>();
+	private AIController m_aiController;
 	private Piece m_choosePieces;
 	private int m_idCurrentPlayer;
 
-	public void Initiate()
+	public void Initiate(AIController aiController)
 	{
 		m_idCurrentPlayer = 0;
+		m_aiController = aiController;
 		m_chessboard.Initiate(this);
 		InitiatePieces(m_piecesWhite, 0);
 		InitiatePieces(m_piecesBlack, 1);
@@ -33,8 +35,16 @@ public class PiecesManager : MonoBehaviour
 
 	public void ChangePlayer()
 	{
-		m_idCurrentPlayer = m_idCurrentPlayer == 0 ? 1 : 0;
+		m_idCurrentPlayer = m_idCurrentPlayer == 0 ? m_aiController.m_isActive ? 2 : 1 : 0;
 		m_changePlayerEvent.Invoke();
+	}
+
+	public void SetPlayerAI()
+	{
+		if (m_idCurrentPlayer != 0)
+		{
+			m_idCurrentPlayer = m_aiController.m_isActive ? 2 : 1;
+		}
 	}
 
 	public int GetIsKillAll()
@@ -188,8 +198,9 @@ public class PiecesManager : MonoBehaviour
 	} 
 	
 	public int GetIdPlayer() => m_idCurrentPlayer;
-	public Chessboard GetChessboard() =>m_chessboard;
+	public Chessboard GetChessboard() => m_chessboard;
 	public bool IsChoosePiece() => m_choosePieces != null;
+	public List<Piece> GetPieceListAI() => m_piecesBlack;
 
 	private void BuildListKill(List<Piece> pieces, List<Piece> piecesTarget, Piece.TypePiece typePiece)
 	{

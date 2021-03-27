@@ -88,8 +88,14 @@ public class Piece : MonoBehaviour
 		gameObject.SetActive(false);
 	}
 
+	public List<ChessboardSquare> GetAcceptSquareAi()
+	{
+		return m_piecesManager.GetChessboard().GetAcceptSquares(m_currentSquare, m_moveRule.GetMassMove(m_idPlayer), m_moveRule.GetMaxCountSquare(), m_idPlayer);
+	}
+
 	public int GetIdPlayer() => m_idPlayer;
 	public TypePiece GetRule() => m_typePiece;
+	public ChessboardSquare GetChessboardSquare() => m_currentSquare;
 
 	private void SetSprites(int idPlayer, TypePiece typePiece)
 	{
