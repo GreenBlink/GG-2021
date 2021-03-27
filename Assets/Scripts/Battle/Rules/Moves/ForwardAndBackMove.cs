@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class DiagonalMove : StandartMove
+public class ForwardAndBackMove : StandartMove
 {
 	public override int[] GetMassMove(int idPlayer)
 	{
-		return new[] {9, 7, -9, -7, 0};
+		return new[] {8, -8, 0};
 	}
 	
 	public override int GetMaxCountSquare()
 	{
-		return -1;
+		return 1;
 	}
 }

@@ -6,18 +6,29 @@ using UnityEngine;
 
 public class ChessboardSquare : MonoBehaviour
 {
+    public enum TypeLight
+    {
+        Target,
+        Error,
+        MouseOver, 
+        Path
+    }
+    
     [SerializeField] private SpriteRenderer m_frameBack;
     [SerializeField] private SpriteRenderer m_frameForward;
-    [SerializeField] private Color m_colorClear;
-    [SerializeField] private Color m_colorSelfPiece;
-    [SerializeField] private Color m_colorEnemyPiece;
+    [SerializeField] private Color m_colorGray;
+    [SerializeField] private Color m_colorGreen;
+    [SerializeField] private Color m_colorRed;
+    [SerializeField] private Color m_colorBlue;
 
     private PiecesManager m_piecesManager;
     private Piece m_currentPiece;
+    private TypeLight m_typeLight;
 
     public void Initiate(PiecesManager piecesManager)
     {
         m_piecesManager = piecesManager;
+        m_currentPiece = null;
         
         m_frameBack.DOFade(0, 0);
         m_frameForward.DOFade(0, 0);
@@ -33,22 +44,15 @@ public class ChessboardSquare : MonoBehaviour
 
     private void OnMouseEnter()
     {
-        Light();
+        Light(TypeLight.MouseOver);
     }
 
     private void OnMouseExit()
     {
-        Fade();
+        Hide(false);
     }
-
-    public void Light()
-    {
-        InitiateColorFrame();
-        m_frameBack.DOFade(1, 0.5f);
-        m_frameForward.DOFade(1, 0.5f);
-    }
-
-    public void Fade()
+    
+    public void Hide(bool ignoreType)
     {
         m_frameBack.DOFade(0, 0.5f);
         m_frameForward.DOFade(0, 0.5f);
@@ -64,15 +68,8 @@ public class ChessboardSquare : MonoBehaviour
         m_currentPiece = null;
     }
 
+    public bool IsThisPlayer(int idPlayer) => m_currentPiece != null && m_currentPiece.GetIdPlayer() == idPlayer;
     public bool IsClear() => m_currentPiece == null;
-
-    public void Blink()
-    {
-        m_frameBack.color = m_colorEnemyPiece;
-        m_frameForward.color = m_colorEnemyPiece;
-        m_frameBack.DOFade(0, 0.2f).OnComplete(() => m_frameBack.DOFade(1, 0.2f));
-        m_frameForward.DOFade(0, 0.2f).OnComplete(() => m_frameForward.DOFade(1, 0.2f));
-    }
 
     public void DestroyPiece()
     {
@@ -83,22 +80,58 @@ public class ChessboardSquare : MonoBehaviour
         }
     }
 
-    private void InitiateColorFrame()
+    public void Light(TypeLight typeLight)
     {
-        if (m_currentPiece == null)
+        m_typeLight = typeLight;
+        
+        switch (typeLight)
         {
-            m_frameBack.color = m_colorClear;
-            m_frameForward.color = m_colorClear;
+            case TypeLight.Target:
+                SetColor(m_colorGreen);
+                InitiateLight();
+                break;
+            
+            case TypeLight.MouseOver:
+                if (m_currentPiece == null || m_currentPiece.GetIdPlayer() != m_piecesManager.GetIdPlayer())
+                {
+                    SetColor(m_colorGray);
+                }
+                else
+                {
+                    SetColor(m_colorGreen);
+                }
+                
+                InitiateLight();
+                break;
+            
+            case TypeLight.Path:
+                SetColor(m_colorBlue);
+                InitiateLight();
+                break;
+            
+            case TypeLight.Error:
+                Blink();
+                break;
         }
-        else if (m_currentPiece.GetIdPlayer() == m_piecesManager.GetIdPlayer())
-        {
-            m_frameBack.color = m_colorSelfPiece;
-            m_frameForward.color = m_colorSelfPiece;
-        }
-        else
-        {
-            m_frameBack.color = m_colorEnemyPiece;
-            m_frameForward.color = m_colorEnemyPiece;
-        }
+    }
+    
+    private void Blink()
+    {
+        Color color = m_frameBack.color;
+            
+        m_frameBack.DOColor(m_colorRed, 0.2f).OnComplete(() => m_frameBack.DOColor(color, 0.2f));
+        m_frameForward.DOColor(m_colorRed, 0.2f).OnComplete(() => m_frameForward.DOColor(color, 0.2f));
+    }
+    
+    private void InitiateLight()
+    {
+        m_frameBack.DOFade(1, 0.5f);
+        m_frameForward.DOFade(1, 0.5f);
+    }
+
+    private void SetColor(Color color)
+    {
+        m_frameBack.color = color;
+        m_frameForward.color = color;
     }
 }

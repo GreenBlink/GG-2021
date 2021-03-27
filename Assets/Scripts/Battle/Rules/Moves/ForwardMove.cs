@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class ForwardMove : IMoveRule
+public class ForwardMove : StandartMove
 {
-	public bool Move(Transform transform, Chessboard chessboard, ChessboardSquare startSquare, ChessboardSquare targetSquare)
+	public bool Move(Transform transform, Chessboard chessboard, ChessboardSquare startSquare, ChessboardSquare targetSquare, int idPlayer)
 	{
-		List<ChessboardSquare> acceptSquares = chessboard.GetAcceptSquares(startSquare, GetMassMove(), GetMaxCountSquare());
+		List<ChessboardSquare> acceptSquares = chessboard.GetAcceptSquares(startSquare, GetMassMove(idPlayer), GetMaxCountSquare(), idPlayer);
 
 		if (acceptSquares.Contains(targetSquare))
 		{
@@ -18,12 +18,12 @@ public class ForwardMove : IMoveRule
 		return false;
 	}
 
-	public int[] GetMassMove()
+	public override int[] GetMassMove(int idPlayer)
 	{
-		return new[] {8, -8, 0};
+		return idPlayer == 0 ? new[] {8, 0} : new[] {-8, 0};
 	}
 	
-	public int GetMaxCountSquare()
+	public override int GetMaxCountSquare()
 	{
 		return 1;
 	}

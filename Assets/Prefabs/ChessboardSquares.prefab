@@ -48,9 +48,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_frameBack: {fileID: 5619590974295790062}
   m_frameForward: {fileID: 1946045746170009372}
-  m_colorClear: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
-  m_colorSelfPiece: {r: 0.004499793, g: 1, b: 0, a: 1}
-  m_colorEnemyPiece: {r: 1, g: 0, b: 0, a: 1}
+  m_colorGray: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
+  m_colorGreen: {r: 0.35261044, g: 1, b: 0.2867924, a: 1}
+  m_colorRed: {r: 1, g: 0.1830188, b: 0.1830188, a: 1}
+  m_colorBlue: {r: 0.2396226, g: 0.26657867, b: 1, a: 1}
 --- !u!61 &5619590973861514599
 BoxCollider2D:
   m_ObjectHideFlags: 0

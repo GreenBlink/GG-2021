@@ -2,9 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PiecesManager : MonoBehaviour
 {
+	public UnityEvent m_changePlayerEvent;
+	
 	[SerializeField] private List<Piece> m_piecesWhite;
 	[SerializeField] private List<Piece> m_piecesBlack;
 	[SerializeField] private Chessboard m_chessboard;
@@ -23,6 +26,7 @@ public class PiecesManager : MonoBehaviour
 	public void ChangePlayer()
 	{
 		m_idCurrentPlayer = m_idCurrentPlayer == 0 ? 1 : 0;
+		m_changePlayerEvent.Invoke();
 	}
 
 	public void MoveParty(ChessboardSquare square, Piece piece)
@@ -37,11 +41,14 @@ public class PiecesManager : MonoBehaviour
 				}
 				else if (piece.GetIdPlayer() == GetIdPlayer())
 				{
-					piece.BlinkSquare();
+					ChoosePiece(piece);
 				}
 				else
 				{
-					//DestroyPiece(square);
+					if (MovePiece(square))
+					{
+						DestroyPiece(piece);
+					}
 				}
 			}
 			else
@@ -59,7 +66,7 @@ public class PiecesManager : MonoBehaviour
 				}
 				else
 				{
-					square.Blink();
+					square.Light(ChessboardSquare.TypeLight.Error);
 				}
 			}
 		}
@@ -77,19 +84,16 @@ public class PiecesManager : MonoBehaviour
 			}
 			else
 			{
-				square.Blink();
+				square.Light(ChessboardSquare.TypeLight.Error);
 			}
 		}
 		
 		return false;
 	}
 
-	public void DestroyPiece(ChessboardSquare square)
+	public void DestroyPiece(Piece piece)
 	{
-		if (MovePiece(square))
-		{
-			square.DestroyPiece();
-		}
+		piece.Destroy();
 	}
 
 	public void ChoosePiece(Piece piece)
@@ -104,8 +108,33 @@ public class PiecesManager : MonoBehaviour
 	{
 		if (m_choosePieces != null)
 		{
+			m_chessboard.HideSquares();
 			m_choosePieces.CancelChoose();
 			m_choosePieces = null;
+		}
+	}
+
+	public void SetNewMoveRule(Piece.TypePiece typePiece, IMoveRule moveRule)
+	{
+		List<Piece> pieces = m_piecesWhite;
+		pieces.AddRange(m_piecesBlack);
+		
+		if (typePiece == Piece.TypePiece.Any)
+		{
+			for (int i = 0; i < pieces.Count; i++)
+			{
+				pieces[i].SetMoveRule(moveRule);
+			}
+		}
+		else
+		{
+			for (int i = 0; i < pieces.Count; i++)
+			{
+				if (pieces[i].GetRule() == typePiece)
+				{
+					pieces[i].SetMoveRule(moveRule);
+				}
+			}
 		}
 	}
 	
@@ -117,14 +146,14 @@ public class PiecesManager : MonoBehaviour
 	{
 		int i = 0;
 		
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Castle, new FreeMove());
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Knight, new FreeMove());
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Bishop, new FreeMove());
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.King, new FreeMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Castle, new StraightLinesMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Knight, new KnightMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Bishop, new DiagonalMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.King, new OneMove());
 		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Queen, new QueenMove());
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Bishop, new FreeMove());
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Knight, new FreeMove());
-		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Castle, new FreeMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Bishop, new DiagonalMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Knight, new KnightMove());
+		pieces[i++].Initiate(this, m_chessboard.GetClearSquare(idPlayer == 0), idPlayer, Piece.TypePiece.Castle, new StraightLinesMove());
 
 		for (; i < pieces.Count; i++)
 		{

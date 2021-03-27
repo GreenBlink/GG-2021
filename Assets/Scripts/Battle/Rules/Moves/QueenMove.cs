@@ -3,27 +3,14 @@ using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 
-public class QueenMove : IMoveRule
+public class QueenMove : StandartMove
 {
-	public bool Move(Transform transform, Chessboard chessboard, ChessboardSquare startSquare, ChessboardSquare targetSquare)
-	{
-		List<ChessboardSquare> acceptSquares = chessboard.GetAcceptSquares(startSquare, GetMassMove(), GetMaxCountSquare());
-
-		if (acceptSquares.Contains(targetSquare))
-		{
-			transform.DOMove(targetSquare.transform.position, 0.5f);
-			return true;
-		}
-
-		return false;
-	}
-
-	public int[] GetMassMove()
+	public override int[] GetMassMove(int idPlayer)
 	{
 		return new[] {8, -8, 9, -9, 7, -7, 1, -1, 0};
 	}
 	
-	public int GetMaxCountSquare()
+	public override int GetMaxCountSquare()
 	{
 		return -1;
 	}

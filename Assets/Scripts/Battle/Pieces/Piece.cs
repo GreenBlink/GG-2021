@@ -12,7 +12,8 @@ public class Piece : MonoBehaviour
 		Castle,
 		Knight,
 		Queen,
-		King
+		King, 
+		Any
 	}
 
 	[SerializeField] private List<Sprite> m_spritePiecesWhite;
@@ -21,7 +22,7 @@ public class Piece : MonoBehaviour
 	[SerializeField] private SpriteRenderer m_frame;
 	[SerializeField] private Transform m_graphics;
 
-	protected TypePiece m_typePiece;
+	private TypePiece m_typePiece;
 	private PiecesManager m_piecesManager;
 	private ChessboardSquare m_currentSquare;
 	private IMoveRule m_moveRule;
@@ -31,6 +32,7 @@ public class Piece : MonoBehaviour
 	{
 		m_piecesManager = piecesManager;
 		transform.position = startSquare.transform.position;
+		gameObject.SetActive(true);
 
 		InitiateType(typePiece, idPlayer);
 		SetMoveRule(moveRule);
@@ -56,12 +58,12 @@ public class Piece : MonoBehaviour
 		m_frame.DOFade(1, 0.5f);
 		m_graphics.DOLocalMoveY(0.3f, 0.5f);
 		
-		m_piecesManager.GetChessboard().LightAcceptSquares(m_currentSquare, m_moveRule.GetMassMove(), m_moveRule.GetMaxCountSquare());
+		m_piecesManager.GetChessboard().LightAcceptSquares(m_currentSquare, m_moveRule.GetMassMove(m_idPlayer), m_moveRule.GetMaxCountSquare(), m_idPlayer);
 	}
 
 	public void BlinkSquare()
 	{
-		m_currentSquare.Blink();
+		m_currentSquare.Light(ChessboardSquare.TypeLight.Error);
 	}
 	
 	public void CancelChoose(bool isFast = false)
@@ -72,7 +74,7 @@ public class Piece : MonoBehaviour
 
 	public bool Move(ChessboardSquare targetSquare)
 	{
-		if (m_moveRule.Move(transform, m_piecesManager.GetChessboard(), m_currentSquare, targetSquare))
+		if (m_moveRule.Move(transform, m_piecesManager.GetChessboard(), m_currentSquare, targetSquare, m_idPlayer))
 		{
 			SetSquare(targetSquare);
 			return true;
@@ -83,10 +85,11 @@ public class Piece : MonoBehaviour
 
 	public void Destroy()
 	{
-		Destroy(gameObject);
+		gameObject.SetActive(false);
 	}
 
 	public int GetIdPlayer() => m_idPlayer;
+	public TypePiece GetRule() => m_typePiece;
 
 	private void SetSprites(int idPlayer, TypePiece typePiece)
 	{
@@ -102,6 +105,7 @@ public class Piece : MonoBehaviour
 		
 		targetSquare.SetPiece(this);
 		m_currentSquare = targetSquare;
+		m_piecesManager.GetChessboard().HideSquares();
 	}
 
 	private void ClearCurrentSquare()
