@@ -11,8 +11,9 @@ public class PiecesManager : MonoBehaviour
 	[SerializeField] private List<Piece> m_piecesWhite;
 	[SerializeField] private List<Piece> m_piecesBlack;
 	[SerializeField] private Chessboard m_chessboard;
+    [SerializeField] private SoundControl sControl;
 
-	private List<Piece> m_pieces = new List<Piece>();
+    private List<Piece> m_pieces = new List<Piece>();
 	private Piece m_choosePieces;
 	private int m_idCurrentPlayer;
 
@@ -92,12 +93,14 @@ public class PiecesManager : MonoBehaviour
 				else if (piece.GetIdPlayer() == GetIdPlayer())
 				{
 					ChoosePiece(piece);
+                    sControl.playClick();
 				}
 				else
 				{
 					if (MovePiece(square))
 					{
 						DestroyPiece(piece);
+                        sControl.playDeath();
 						ChangePlayer();
 					}
 				}
@@ -117,7 +120,8 @@ public class PiecesManager : MonoBehaviour
 				if (piece.GetIdPlayer() == GetIdPlayer())
 				{
 					ChoosePiece(piece);
-				}
+                    sControl.playClick();
+                }
 				else
 				{
 					square.Light(ChessboardSquare.TypeLight.Error);
@@ -133,7 +137,8 @@ public class PiecesManager : MonoBehaviour
 			if (m_choosePieces.Move(square))
 			{
 				CancelChoosePiece();
-				return true;
+                sControl.playMove();
+                return true;
 			}
 			else
 			{
