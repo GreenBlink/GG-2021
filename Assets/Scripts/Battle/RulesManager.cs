@@ -83,12 +83,18 @@ public class RulesManager : MonoBehaviour
 
     private void SetVictoryRule(VictoryRule victoryRule)
     {
+        if (m_currentVictoryRule == victoryRule)
+            return;
+        
         m_currentVictoryRule = victoryRule;
         m_descriptionRuleVictory = InitiateDescriptionRule(m_descriptionRuleVictory, victoryRule);
     }
 
     private void SetMoveRule(MoveRule moveRule)
     {
+        if (m_currentMoveRule == moveRule)
+            return;
+        
         m_currentMoveRule = moveRule;
 
         switch (m_currentMoveRule.m_TypeMoveRule)

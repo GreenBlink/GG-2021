@@ -104,8 +104,10 @@ public class PiecesManager : MonoBehaviour
 			}
 			else
 			{
-				MovePiece(square);
-				ChangePlayer();
+				if (MovePiece(square))
+				{
+					ChangePlayer();
+				}
 			}
 		}
 		else
