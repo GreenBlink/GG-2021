@@ -15,7 +15,7 @@ public class PanelResult : MonoBehaviour
         }
         
         gameObject.SetActive(true);
-        m_textResult.text = idPlayer == 0 ? "Победили белые" : "Победили черные";
+        m_textResult.text = idPlayer == 0 ? "Выйграл представитель светлых сил" : "Выйграл представитель темных сил";
     }
 
     public void Hide()
